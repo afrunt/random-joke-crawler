@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.afrunt.randomjoke</groupId>
+    <groupId>com.afrunt</groupId>
     <artifactId>random-joke-crawler</artifactId>
-    <version>0.1</version>
+    <version>0.2-SNAPSHOT</version>
 
     <name>Random Joke Crawler</name>
 
     <description>Open source random joke crawler</description>
-    <url>https://github.com/afrunt/random-joke</url>
+    <url>https://github.com/afrunt/random-joke-crawler</url>
 
     <licenses>
         <license>
@@ -21,9 +21,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/afrunt/random-joke.git</connection>
-        <developerConnection>scm:git:ssh://github.com/afrunt/random-joke.git</developerConnection>
-        <url>http://github.com/afrunt/random-joke/tree/master</url>
+        <connection>scm:git:git://github.com/afrunt/random-joke-crawler.git</connection>
+        <developerConnection>scm:git:ssh://github.com/afrunt/random-joke-crawler.git</developerConnection>
+        <url>http://github.com/afrunt/random-joke-crawler/tree/master</url>
     </scm>
 
     <developers>
@@ -98,7 +98,7 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.7</version>
+                        <version>1.6.8</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>ossrh</serverId>
@@ -138,7 +138,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
+                        <version>1.6</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
