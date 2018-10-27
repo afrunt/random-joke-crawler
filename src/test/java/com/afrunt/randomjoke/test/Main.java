@@ -13,7 +13,6 @@ public class Main {
         for (int i = 0; i < 100; i++) {
             jokeCrawler.randomJoke().ifPresent(Main::printJoke);
         }
-
     }
 
     private static void printJoke(Joke joke) {
