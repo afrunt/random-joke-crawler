@@ -25,5 +25,5 @@ JokeCrawler jokeCrawler = new JokeCrawler()
 Or you can define your own set of sources:
 ```java
 JokeCrawler jokeCrawler = new JokeCrawler()
-                .with(BashOrg.class);
+                .with(BashOrg.class, ChuckNorris.class);
 ``` 
