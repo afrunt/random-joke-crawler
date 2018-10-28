@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * @author Andrii Frunt
  */
-public class JokeCrawler {
+public class Jokes {
     private List<AbstractJokeSupplier> jokeSuppliers = new ArrayList<>();
 
     public Optional<Joke> randomJoke() {
@@ -36,12 +36,12 @@ public class JokeCrawler {
                 return Optional.empty();
             }
         } catch (Exception e) {
-            Logger.getLogger(JokeCrawler.class.getName()).log(Level.WARNING, "Error getting joke from " + jokeSupplier.getClass().getSimpleName() + " " + e.getLocalizedMessage());
+            Logger.getLogger(Jokes.class.getName()).log(Level.WARNING, "Error getting joke from " + jokeSupplier.getClass().getSimpleName() + " " + e.getLocalizedMessage());
             return Optional.empty();
         }
     }
 
-    public JokeCrawler withDefaultSuppliers() {
+    public Jokes withDefaultSuppliers() {
         List<AbstractJokeSupplier> suppliers = new ArrayList<>();
         for (Class<? extends AbstractJokeSupplier> spc : Constants.DEFAULT_JOKE_SUPPLIERS) {
             suppliers.add(initSupplier(spc));
@@ -49,7 +49,7 @@ public class JokeCrawler {
         return setJokeSuppliers(suppliers);
     }
 
-    public JokeCrawler without(Class<? extends AbstractJokeSupplier> supplierType) {
+    public Jokes without(Class<? extends AbstractJokeSupplier> supplierType) {
         return setJokeSuppliers(
                 getJokeSuppliers().stream()
                         .filter(s -> !supplierType.isAssignableFrom(s.getClass()))
@@ -57,7 +57,7 @@ public class JokeCrawler {
         );
     }
 
-    public JokeCrawler with(Class<? extends AbstractJokeSupplier>... supplierTypes) {
+    public Jokes with(Class<? extends AbstractJokeSupplier>... supplierTypes) {
         for (Class<? extends AbstractJokeSupplier> supplierType : supplierTypes) {
             addSupplier(initSupplier(supplierType));
         }
@@ -69,12 +69,12 @@ public class JokeCrawler {
         return jokeSuppliers;
     }
 
-    public JokeCrawler setJokeSuppliers(List<AbstractJokeSupplier> jokeSuppliers) {
+    public Jokes setJokeSuppliers(List<AbstractJokeSupplier> jokeSuppliers) {
         this.jokeSuppliers = jokeSuppliers;
         return this;
     }
 
-    public JokeCrawler addSupplier(AbstractJokeSupplier supplier) {
+    public Jokes addSupplier(AbstractJokeSupplier supplier) {
         if (!alreadyHasSupplier(supplier.getClass())) {
             List<AbstractJokeSupplier> suppliers = new ArrayList<>(getJokeSuppliers());
             suppliers.add(supplier);

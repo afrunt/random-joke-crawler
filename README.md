@@ -5,27 +5,27 @@ Add random-joke-crawler to your project. for maven projects just add this depend
 <dependency>
   <groupId>com.afrunt.randomjoke</groupId>
   <artifactId>random-joke-crawler</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
 </dependency>
 ```
 It is extremely easy to initialize and start working with crawler:
 ```java
-JokeCrawler jokeCrawler = new JokeCrawler()
+JokeCrawler jokes = new Jokes()
                             .withDefaultSuppliers();
 
-jokeCrawler.randomJoke().ifPresent(joke -> System.out.println(joke.getText()));
+jokes.randomJoke().ifPresent(joke -> System.out.println(joke.getText()));
 ``` 
 
 You can customize the sources of jokes:
 ```java
-JokeCrawler jokeCrawler = new JokeCrawler()
+JokeCrawler jokes = new Jokes()
                 .withDefaultSuppliers()
                 .with(BashOrg.class);
 ``` 
 
 Or you can define your own set of sources:
 ```java
-JokeCrawler jokeCrawler = new JokeCrawler()
+JokeCrawler jokes = new Jokes()
                 .with(BashOrg.class, ChuckNorris.class);
 ``` 
 
@@ -45,6 +45,6 @@ public class MyJokeSupplier extends AbstractJokeSupplier {
 ``` 
 And add those source using:
 ```java
-JokeCrawler jokeCrawler = new JokeCrawler()
+JokeCrawler jokes = new Jokes()
                 .with(MyJokeSupplier.class);
 ``` 

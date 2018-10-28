@@ -1,7 +1,7 @@
 package com.afrunt.randomjoke.test;
 
 import com.afrunt.randomjoke.Joke;
-import com.afrunt.randomjoke.JokeCrawler;
+import com.afrunt.randomjoke.Jokes;
 import com.afrunt.randomjoke.suppliers.BashOrg;
 
 /**
@@ -9,14 +9,14 @@ import com.afrunt.randomjoke.suppliers.BashOrg;
  */
 public class Example {
     public static void main(String[] args) {
-        JokeCrawler jokeCrawler = new JokeCrawler();
+        Jokes jokes = new Jokes();
 
-        jokeCrawler = jokeCrawler.withDefaultSuppliers()
+        jokes = jokes.withDefaultSuppliers()
                 .without(BashOrg.class)
                 .with(BashOrg.class);
 
         for (int i = 0; i < 100; i++) {
-            jokeCrawler
+            jokes
                     .randomJoke()
                     .ifPresent(Example::printJoke);
         }
