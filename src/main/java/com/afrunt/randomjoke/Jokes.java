@@ -1,6 +1,6 @@
 package com.afrunt.randomjoke;
 
-import com.afrunt.randomjoke.suppliers.AbstractJokeSupplier;
+import com.afrunt.randomjoke.suppliers.*;
 import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.ArrayList;
@@ -43,7 +43,8 @@ public class Jokes {
 
     public Jokes withDefaultSuppliers() {
         List<AbstractJokeSupplier> suppliers = new ArrayList<>();
-        for (Class<? extends AbstractJokeSupplier> spc : Constants.DEFAULT_JOKE_SUPPLIERS) {
+
+        for (Class<? extends AbstractJokeSupplier> spc : getDefaultSuppliers()) {
             suppliers.add(initSupplier(spc));
         }
         return setJokeSuppliers(suppliers);
@@ -94,5 +95,12 @@ public class Jokes {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private List<Class<? extends AbstractJokeSupplier>> getDefaultSuppliers() {
+        return List.of(
+                ChuckNorris.class, GeekJoke.class, SecondChuckNorris.class,
+                ICanHazDadJoke.class, Dkatz.class, BashOrg.class, GoodBadJokes.class
+        );
     }
 }
