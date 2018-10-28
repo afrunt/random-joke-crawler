@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * @author Andrii Frunt
  */
-public class ICanHazDadJoke extends AbstractSupplier {
+public class ICanHazDadJoke extends AbstractJokeSupplier {
     @Override
     public Joke get() {
         JSONObject jsonObject = jsonObjectFromUrl("https://icanhazdadjoke.com/", Map.of("Accept", "application/json"));

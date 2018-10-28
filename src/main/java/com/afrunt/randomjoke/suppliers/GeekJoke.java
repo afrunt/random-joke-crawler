@@ -5,7 +5,7 @@ import com.afrunt.randomjoke.Joke;
 /**
  * @author Andrii Frunt
  */
-public class GeekJoke extends AbstractSupplier {
+public class GeekJoke extends AbstractJokeSupplier {
     @Override
     public Joke get() {
         return new Joke()

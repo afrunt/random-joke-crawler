@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * @author Andrii Frunt
  */
-public class BashOrg extends AbstractSupplier {
+public class BashOrg extends AbstractJokeSupplier {
     @Override
     public Joke get() {
         return new Joke().setText(findFirstRandomJoke());

@@ -6,7 +6,7 @@ import org.json.JSONObject;
 /**
  * @author Andrii Frunt
  */
-public class ChuckNorris extends AbstractSupplier {
+public class ChuckNorris extends AbstractJokeSupplier {
     @Override
     public Joke get() {
         JSONObject jsonObject = jsonObjectFromUrl("https://api.chucknorris.io/jokes/random");

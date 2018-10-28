@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 /**
  * @author Andrii Frunt
  */
-public abstract class AbstractSupplier implements Supplier<Joke> {
+public abstract class AbstractJokeSupplier implements Supplier<Joke> {
     private HtmlCleaner cleaner = new HtmlCleaner();
 
     public abstract String getSource();

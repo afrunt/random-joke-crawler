@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * @author Andrii Frunt
  */
-public class GoodBadJokes extends AbstractSupplier {
+public class GoodBadJokes extends AbstractJokeSupplier {
     @Override
     public String getSource() {
         return "goodbadjokes.com";

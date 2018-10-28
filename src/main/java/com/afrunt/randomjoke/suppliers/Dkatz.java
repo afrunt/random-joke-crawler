@@ -6,7 +6,7 @@ import org.json.JSONObject;
 /**
  * @author Andrii Frunt
  */
-public class Dkatz extends AbstractSupplier {
+public class Dkatz extends AbstractJokeSupplier {
     @Override
     public Joke get() {
         JSONObject jsonObject = jsonObjectFromUrl("https://08ad1pao69.execute-api.us-east-1.amazonaws.com/dev/random_joke");
