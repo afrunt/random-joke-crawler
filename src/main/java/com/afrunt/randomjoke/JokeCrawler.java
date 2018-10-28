@@ -1,6 +1,7 @@
 package com.afrunt.randomjoke;
 
 import com.afrunt.randomjoke.suppliers.AbstractSupplier;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class JokeCrawler {
             Joke joke = jokeSupplier.get();
             if (joke != null) {
                 return Optional.of(joke
+                        .setText(StringEscapeUtils.unescapeHtml4(joke.getText()))
                         .setTimeout(System.currentTimeMillis() - start)
                         .setSource(jokeSupplier.getSource())
                 );
