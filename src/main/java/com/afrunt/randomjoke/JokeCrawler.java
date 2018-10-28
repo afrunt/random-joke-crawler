@@ -52,16 +52,14 @@ public class JokeCrawler {
     public JokeCrawler without(Class<? extends AbstractSupplier> supplierType) {
         return setJokeSuppliers(
                 getJokeSuppliers().stream()
-                        .filter(s -> supplierType.isAssignableFrom(s.getClass()))
+                        .filter(s -> !supplierType.isAssignableFrom(s.getClass()))
                         .collect(Collectors.toList())
         );
     }
 
     public JokeCrawler with(Class<? extends AbstractSupplier>... supplierTypes) {
         for (Class<? extends AbstractSupplier> supplierType : supplierTypes) {
-            if (!alreadyHasSupplier(supplierType)) {
-                addSupplier(initSupplier(supplierType));
-            }
+            addSupplier(initSupplier(supplierType));
         }
 
         return this;
@@ -78,7 +76,7 @@ public class JokeCrawler {
 
     public JokeCrawler addSupplier(AbstractSupplier supplier) {
         if (!alreadyHasSupplier(supplier.getClass())) {
-            ArrayList<AbstractSupplier> suppliers = new ArrayList<>(getJokeSuppliers());
+            List<AbstractSupplier> suppliers = new ArrayList<>(getJokeSuppliers());
             suppliers.add(supplier);
             return setJokeSuppliers(suppliers);
         } else {

@@ -9,8 +9,9 @@ import com.afrunt.randomjoke.suppliers.BashOrg;
  */
 public class Example {
     public static void main(String[] args) {
-        JokeCrawler jokeCrawler = new JokeCrawler()
-                .withDefaultSuppliers()
+        JokeCrawler jokeCrawler = new JokeCrawler();
+
+        jokeCrawler = jokeCrawler.withDefaultSuppliers()
                 .without(BashOrg.class)
                 .with(BashOrg.class);
 
