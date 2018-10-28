@@ -28,3 +28,23 @@ Or you can define your own set of sources:
 JokeCrawler jokeCrawler = new JokeCrawler()
                 .with(BashOrg.class, ChuckNorris.class);
 ``` 
+
+Create your own source by extending the AbstractJokeSupplier:
+```java
+public class MyJokeSupplier extends AbstractJokeSupplier {
+    @Override
+    public Joke get() {
+        return new Joke().setText("The best joke ever");
+    }
+
+    @Override
+    public String getSource() {
+        return "my.org";
+    }
+}
+``` 
+And add those source using:
+```java
+JokeCrawler jokeCrawler = new JokeCrawler()
+                .with(MyJokeSupplier.class);
+``` 
