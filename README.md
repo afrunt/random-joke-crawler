@@ -11,7 +11,7 @@ Add random-joke-crawler to your project. for maven projects just add this depend
 It is extremely easy to initialize and start working with crawler:
 ```java
 Jokes jokes = new Jokes()
-                            .withDefaultSuppliers();
+                 .withDefaultSuppliers();
 
 jokes.randomJoke().ifPresent(joke -> System.out.println(joke.getText()));
 ``` 
