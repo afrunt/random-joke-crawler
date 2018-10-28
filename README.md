@@ -10,7 +10,7 @@ Add random-joke-crawler to your project. for maven projects just add this depend
 ```
 It is extremely easy to initialize and start working with crawler:
 ```java
-JokeCrawler jokes = new Jokes()
+Jokes jokes = new Jokes()
                             .withDefaultSuppliers();
 
 jokes.randomJoke().ifPresent(joke -> System.out.println(joke.getText()));
@@ -18,14 +18,14 @@ jokes.randomJoke().ifPresent(joke -> System.out.println(joke.getText()));
 
 You can customize the sources of jokes:
 ```java
-JokeCrawler jokes = new Jokes()
+Jokes jokes = new Jokes()
                 .withDefaultSuppliers()
                 .with(BashOrg.class);
 ``` 
 
 Or you can define your own set of sources:
 ```java
-JokeCrawler jokes = new Jokes()
+Jokes jokes = new Jokes()
                 .with(BashOrg.class, ChuckNorris.class);
 ``` 
 
@@ -45,6 +45,6 @@ public class MyJokes extends AbstractJokeSupplier {
 ``` 
 And add those source using:
 ```java
-JokeCrawler jokes = new Jokes()
+Jokes jokes = new Jokes()
                 .with(MyJokes.class);
 ``` 
