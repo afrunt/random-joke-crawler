@@ -39,7 +39,7 @@ public class MyJokeSupplier extends AbstractJokeSupplier {
 
     @Override
     public String getSource() {
-        return "my.org";
+        return "my.joke";
     }
 }
 ``` 
