@@ -6,7 +6,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -38,6 +38,49 @@ public class Jokes {
         } catch (Exception e) {
             Logger.getLogger(Jokes.class.getName()).log(Level.WARNING, "Error getting joke from " + jokeSupplier.getClass().getSimpleName() + " " + e.getLocalizedMessage());
             return Optional.empty();
+        }
+    }
+
+    public List<Joke> randomJokes(int count) {
+        List<Joke> jokes = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            Optional<Joke> joke = randomJoke();
+            while (!joke.isPresent()) {
+                joke = randomJoke();
+            }
+            jokes.add(joke.get());
+        }
+
+        return jokes;
+    }
+
+    public List<Joke> randomJokes(int count, int parallelism) {
+        ExecutorService pool = Executors.newFixedThreadPool(parallelism);
+        try {
+            List<Future<Joke>> tasks = new ArrayList<>();
+
+            for (int i = 0; i < count; i++) {
+                Future<Joke> task = pool.submit(() -> {
+                    Optional<Joke> joke = randomJoke();
+                    while (!joke.isPresent()) {
+                        joke = randomJoke();
+                    }
+                    return joke.get();
+                });
+                tasks.add(task);
+            }
+
+            List<Joke> jokes = new ArrayList<>();
+
+            for (Future<Joke> task : tasks) {
+                jokes.add(task.get());
+            }
+
+            return jokes;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            pool.shutdown();
         }
     }
 
