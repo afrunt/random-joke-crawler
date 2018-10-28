@@ -17,15 +17,11 @@ public class BashOrg extends AbstractJokeSupplier {
     }
 
     private String findFirstRandomJoke() {
-        TagNode node = tagNodeFromUrl("http://bash.org/?random");
+        TagNode jokeNode = tagNodeFromUrl("http://bash.org/?random").findElementByAttValue("class", "qt", true, true);
 
-        TagNode jokeNode = node.findElementByAttValue("class", "qt", true, true);
-
-        String text = jokeNode.getAllChildren().stream()
+        return jokeNode.getAllChildren().stream()
                 .map(c -> c instanceof ContentNode ? StringEscapeUtils.unescapeHtml4(((ContentNode) c).getContent()) : "\n")
                 .collect(Collectors.joining());
-
-        return text;
     }
 
     @Override

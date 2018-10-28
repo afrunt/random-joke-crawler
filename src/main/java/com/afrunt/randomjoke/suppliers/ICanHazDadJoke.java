@@ -1,7 +1,6 @@
 package com.afrunt.randomjoke.suppliers;
 
 import com.afrunt.randomjoke.Joke;
-import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -11,10 +10,11 @@ import java.util.Map;
 public class ICanHazDadJoke extends AbstractJokeSupplier {
     @Override
     public Joke get() {
-        JSONObject jsonObject = jsonObjectFromUrl("https://icanhazdadjoke.com/", Map.of("Accept", "application/json"));
-
         return new Joke()
-                .setText(jsonObject.optString("joke"));
+                .setText(
+                        jsonObjectFromUrl("https://icanhazdadjoke.com/", Map.of("Accept", "application/json"))
+                                .optString("joke")
+                );
     }
 
     @Override

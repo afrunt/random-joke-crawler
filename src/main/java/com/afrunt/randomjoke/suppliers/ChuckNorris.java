@@ -1,7 +1,6 @@
 package com.afrunt.randomjoke.suppliers;
 
 import com.afrunt.randomjoke.Joke;
-import org.json.JSONObject;
 
 /**
  * @author Andrii Frunt
@@ -9,8 +8,7 @@ import org.json.JSONObject;
 public class ChuckNorris extends AbstractJokeSupplier {
     @Override
     public Joke get() {
-        JSONObject jsonObject = jsonObjectFromUrl("https://api.chucknorris.io/jokes/random");
-        return new Joke().setText(jsonObject.optString("value"));
+        return new Joke().setText(jsonObjectFromUrl("https://api.chucknorris.io/jokes/random").optString("value"));
     }
 
     @Override
