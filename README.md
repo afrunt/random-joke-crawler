@@ -31,7 +31,7 @@ JokeCrawler jokes = new Jokes()
 
 Create your own source by extending the AbstractJokeSupplier:
 ```java
-public class MyJokeSupplier extends AbstractJokeSupplier {
+public class MyJokes extends AbstractJokeSupplier {
     @Override
     public Joke get() {
         return new Joke().setText("The best joke ever");
@@ -46,5 +46,5 @@ public class MyJokeSupplier extends AbstractJokeSupplier {
 And add those source using:
 ```java
 JokeCrawler jokes = new Jokes()
-                .with(MyJokeSupplier.class);
+                .with(MyJokes.class);
 ``` 
