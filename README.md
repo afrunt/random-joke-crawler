@@ -5,7 +5,7 @@ Add random-joke-crawler to your project. for maven projects just add this depend
 <dependency>
   <groupId>com.afrunt.randomjoke</groupId>
   <artifactId>random-joke-crawler</artifactId>
-  <version>0.1.2-SNAPSHOT</version>
+  <version>0.1.1</version>
 </dependency>
 ```
 It is extremely easy to initialize and start working with crawler:
