@@ -10,7 +10,8 @@ Add random-joke-crawler to your project. for maven projects just add this depend
 ```
 It is extremely easy to initialize and start working with crawler:
 ```java
-JokeCrawler jokeCrawler = new JokeCrawler().withDefaultSuppliers();
+JokeCrawler jokeCrawler = new JokeCrawler()
+                            .withDefaultSuppliers();
 jokeCrawler.randomJoke().ifPresent(joke -> System.out.println(joke.getText()));
 ``` 
 
