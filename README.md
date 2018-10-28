@@ -12,6 +12,7 @@ It is extremely easy to initialize and start working with crawler:
 ```java
 JokeCrawler jokeCrawler = new JokeCrawler()
                             .withDefaultSuppliers();
+
 jokeCrawler.randomJoke().ifPresent(joke -> System.out.println(joke.getText()));
 ``` 
 
