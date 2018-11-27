@@ -6,7 +6,10 @@ import org.apache.commons.text.StringEscapeUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -143,7 +146,7 @@ public class Jokes {
     private List<Class<? extends AbstractJokeSupplier>> getDefaultSuppliers() {
         return List.of(
                 ChuckNorris.class, GeekJoke.class, SecondChuckNorris.class,
-                ICanHazDadJoke.class, Dkatz.class, BashOrg.class, GoodBadJokes.class
+                ICanHazDadJoke.class, BashOrg.class, GoodBadJokes.class
         );
     }
 }
