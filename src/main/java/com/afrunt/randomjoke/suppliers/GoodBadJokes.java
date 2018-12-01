@@ -5,12 +5,16 @@ import org.htmlcleaner.BaseToken;
 import org.htmlcleaner.TagNode;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 /**
  * @author Andrii Frunt
  */
 public class GoodBadJokes extends AbstractJokeSupplier {
+    private Stack<String> jokeStack = new Stack<>();
+
     @Override
     public String getSource() {
         return "goodbadjokes.com";
@@ -18,12 +22,21 @@ public class GoodBadJokes extends AbstractJokeSupplier {
 
     @Override
     public Joke get() {
-        TagNode page = tagNodeFromUrl("https://www.goodbadjokes.com");
 
-        TagNode firstJoke = page.findElementByAttValue("class", "joke-body-wrap", true, true);
-        TagNode surroundingLink = firstJoke.getAllElements(false)[0];
+        if (jokeStack.isEmpty()) {
+            TagNode page = tagNodeFromUrl("https://www.goodbadjokes.com");
 
-        return new Joke().setText(extractJokeFromLinkTag(surroundingLink));
+            List<? extends TagNode> jokeNodes = page.getElementListByAttValue("class", "joke-body-wrap", true, true);
+
+            jokeNodes.stream().map(this::extractJoke).forEach(j -> jokeStack.push(j));
+        }
+        return new Joke()
+                .setText(jokeStack.pop());
+    }
+
+    private String extractJoke(TagNode jokeNode) {
+        TagNode surroundingLink = jokeNode.getAllElements(false)[0];
+        return extractJokeFromLinkTag(surroundingLink);
     }
 
     private String extractJokeFromLinkTag(TagNode link) {
