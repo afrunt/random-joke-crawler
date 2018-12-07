@@ -6,13 +6,12 @@ import org.apache.commons.text.StringEscapeUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * @author Andrii Frunt
@@ -45,45 +44,34 @@ public class Jokes {
     }
 
     public List<Joke> randomJokes(int count) {
-        List<Joke> jokes = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            Optional<Joke> joke = randomJoke();
-            while (!joke.isPresent()) {
-                joke = randomJoke();
-            }
-            jokes.add(joke.get());
-        }
-
-        return jokes;
+        return randomJokes(count, Runtime.getRuntime().availableProcessors());
     }
 
     public List<Joke> randomJokes(int count, int parallelism) {
         ExecutorService pool = Executors.newFixedThreadPool(parallelism);
         try {
-            List<Future<Joke>> tasks = new ArrayList<>();
-
-            for (int i = 0; i < count; i++) {
-                Future<Joke> task = pool.submit(() -> {
-                    Optional<Joke> joke = randomJoke();
-                    while (!joke.isPresent()) {
-                        joke = randomJoke();
-                    }
-                    return joke.get();
-                });
-                tasks.add(task);
-            }
-
-            List<Joke> jokes = new ArrayList<>();
-
-            for (Future<Joke> task : tasks) {
-                jokes.add(task.get());
-            }
-
-            return jokes;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            return randomJokeStream(pool)
+                    .limit(count)
+                    .collect(Collectors.toList());
         } finally {
             pool.shutdown();
+        }
+    }
+
+    public Stream<Joke> randomJokeStream() {
+        return randomJokeStream(ForkJoinPool.commonPool());
+    }
+
+    public Stream<Joke> randomJokeStream(ExecutorService executor) {
+        try {
+            return executor.submit(() -> IntStream
+                    .range(0, Integer.MAX_VALUE)
+                    .boxed()
+                    .parallel()
+                    .map(i -> CompletableFuture.supplyAsync(this::waitForJoke, executor))
+                    .map(CompletableFuture::join)).get();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -131,6 +119,14 @@ public class Jokes {
         }
     }
 
+    Joke waitForJoke() {
+        Optional<Joke> joke = randomJoke();
+        while (!joke.isPresent()) {
+            joke = randomJoke();
+        }
+        return joke.get();
+    }
+
     private boolean alreadyHasSupplier(Class<? extends AbstractJokeSupplier> supplierType) {
         return getJokeSuppliers().stream().anyMatch(s -> supplierType.isAssignableFrom(s.getClass()));
     }
@@ -149,4 +145,5 @@ public class Jokes {
                 ICanHazDadJoke.class, BashOrg.class, GoodBadJokes.class
         );
     }
+
 }
