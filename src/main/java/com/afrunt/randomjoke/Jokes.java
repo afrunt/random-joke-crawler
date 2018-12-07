@@ -3,9 +3,7 @@ package com.afrunt.randomjoke;
 import com.afrunt.randomjoke.suppliers.*;
 import org.apache.commons.text.StringEscapeUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,14 +15,24 @@ import java.util.stream.Stream;
  * @author Andrii Frunt
  */
 public class Jokes {
+
+    private static final Logger LOGGER = Logger.getLogger(Jokes.class.getName());
+
     private List<AbstractJokeSupplier> jokeSuppliers = new ArrayList<>();
+
+    private Map<AbstractJokeSupplier, Integer> errors = new HashMap<>();
+
+    private Map<AbstractJokeSupplier, Date> disabledSuppliers = new HashMap<>();
+
+    private long disablingTimeoutMillis = TimeUnit.MINUTES.toMillis(1);
+
+    private int errorsToDisable = 10;
 
     public Optional<Joke> randomJoke() {
         if (jokeSuppliers.isEmpty()) {
             return Optional.empty();
         }
-        int supplierIndex = ThreadLocalRandom.current().nextInt(0, jokeSuppliers.size());
-        AbstractJokeSupplier jokeSupplier = jokeSuppliers.get(supplierIndex);
+        AbstractJokeSupplier jokeSupplier = getRandomJokeSupplier();
         try {
             long start = System.currentTimeMillis();
             Joke joke = jokeSupplier.get();
@@ -38,7 +46,7 @@ public class Jokes {
                 return Optional.empty();
             }
         } catch (Exception e) {
-            Logger.getLogger(Jokes.class.getName()).log(Level.WARNING, "Error getting joke from " + jokeSupplier.getClass().getSimpleName() + " " + e.getLocalizedMessage());
+            handleError(jokeSupplier, e);
             return Optional.empty();
         }
     }
@@ -119,12 +127,69 @@ public class Jokes {
         }
     }
 
+    public Jokes withErrorsToDisable(int errorCount) {
+        errorsToDisable = errorCount;
+        return this;
+    }
+
+    public Jokes withDisablingTimeout(long millis) {
+        disablingTimeoutMillis = millis;
+        return this;
+    }
+
     Joke waitForJoke() {
         Optional<Joke> joke = randomJoke();
         while (!joke.isPresent()) {
             joke = randomJoke();
         }
         return joke.get();
+    }
+
+    private void handleError(AbstractJokeSupplier jokeSupplier, Exception e) {
+        LOGGER.log(Level.WARNING, "Error getting joke from " + jokeSupplier.getClass().getSimpleName() + " " + e.getLocalizedMessage());
+        Integer errorCount = errors.getOrDefault(jokeSupplier, 0);
+        errorCount = errorCount + 1;
+        if (errorCount >= errorsToDisable) {
+            HashMap<AbstractJokeSupplier, Date> localDisabledSuppliers = new HashMap<>(disabledSuppliers);
+
+            localDisabledSuppliers.put(jokeSupplier, new Date(System.currentTimeMillis() + disablingTimeoutMillis));
+            ArrayList<AbstractJokeSupplier> localSuppliers = new ArrayList<>(jokeSuppliers);
+            localSuppliers.remove(jokeSupplier);
+            HashMap<AbstractJokeSupplier, Integer> localErrors = new HashMap<>(errors);
+            localErrors.remove(jokeSupplier);
+
+            disabledSuppliers = localDisabledSuppliers;
+            errors = localErrors;
+            jokeSuppliers = localSuppliers;
+
+            LOGGER.log(Level.WARNING, "Supplier " + jokeSupplier.getSource() + " temporary disabled");
+        } else {
+            errors.put(jokeSupplier, errorCount);
+        }
+    }
+
+    private AbstractJokeSupplier getRandomJokeSupplier() {
+        List<AbstractJokeSupplier> suppliersToEnable = disabledSuppliers.entrySet().stream()
+                .filter(entry -> entry.getValue().before(new Date()))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        if (!suppliersToEnable.isEmpty()) {
+            ArrayList<AbstractJokeSupplier> suppliers = new ArrayList<>(jokeSuppliers);
+            suppliers.addAll(suppliersToEnable);
+            HashMap<AbstractJokeSupplier, Date> disabled = new HashMap<>(disabledSuppliers);
+
+            suppliersToEnable
+                    .stream()
+                    .peek(s -> LOGGER.log(Level.WARNING, "Supplier " + s.getSource() + " enabled again"))
+                    .forEach(disabled::remove);
+
+            disabledSuppliers = disabled;
+            jokeSuppliers = suppliers;
+        }
+
+        int supplierIndex = ThreadLocalRandom.current().nextInt(0, jokeSuppliers.size());
+        return jokeSuppliers.get(supplierIndex);
     }
 
     private boolean alreadyHasSupplier(Class<? extends AbstractJokeSupplier> supplierType) {

@@ -1,7 +1,6 @@
 package com.afrunt.randomjoke.test;
 
 import com.afrunt.randomjoke.Jokes;
-import com.afrunt.randomjoke.suppliers.ICanHazDadJoke;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
@@ -15,9 +14,8 @@ public class ExampleJokeStream {
         ForkJoinPool executor = new ForkJoinPool(10);
         new Jokes()
                 .withDefaultSuppliers()
-                .without(ICanHazDadJoke.class)
                 .randomJokeStream(executor)
-                .limit(100)
+                .limit(1000)
                 .forEach(j -> System.out.println(j.getSource() + "\n" + j.getText() + "\n"));
 
         executor.shutdownNow();
