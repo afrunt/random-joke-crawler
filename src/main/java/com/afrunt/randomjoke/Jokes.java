@@ -2,6 +2,7 @@ package com.afrunt.randomjoke;
 
 import com.afrunt.randomjoke.suppliers.*;
 import org.apache.commons.text.StringEscapeUtils;
+import org.htmlcleaner.HtmlCleaner;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
 /**
  * @author Andrii Frunt
  */
-public class Jokes {
+public class Jokes implements HttpOperationsSupport {
 
     private static final Logger LOGGER = Logger.getLogger(Jokes.class.getName());
 
@@ -27,6 +28,7 @@ public class Jokes {
     private long disablingTimeoutMillis = TimeUnit.MINUTES.toMillis(1);
 
     private int errorsToDisable = 10;
+    private HtmlCleaner cleaner;
 
     public Optional<Joke> randomJoke() {
         if (jokeSuppliers.isEmpty()) {
@@ -127,14 +129,22 @@ public class Jokes {
         }
     }
 
-    public Jokes withErrorsToDisable(int errorCount) {
+    public Jokes withErrorsThreshold(int errorCount) {
         errorsToDisable = errorCount;
         return this;
     }
 
-    public Jokes withDisablingTimeout(long millis) {
+    public Jokes withTimeoutThreshold(long millis) {
         disablingTimeoutMillis = millis;
         return this;
+    }
+
+    @Override
+    public HtmlCleaner getCleaner() {
+        if (cleaner == null) {
+            cleaner = new HtmlCleaner();
+        }
+        return cleaner;
     }
 
     Joke waitForJoke() {
@@ -162,7 +172,7 @@ public class Jokes {
             errors = localErrors;
             jokeSuppliers = localSuppliers;
 
-            LOGGER.log(Level.WARNING, "Supplier " + jokeSupplier.getSource() + " temporary disabled");
+            LOGGER.log(Level.WARNING, "Supplier " + jokeSupplier.getSource() + " temporary disabled for " + TimeUnit.MILLISECONDS.toSeconds(disablingTimeoutMillis) + "s");
         } else {
             errors.put(jokeSupplier, errorCount);
         }
@@ -210,5 +220,4 @@ public class Jokes {
                 ICanHazDadJoke.class, BashOrg.class, GoodBadJokes.class
         );
     }
-
 }

@@ -20,6 +20,7 @@ public class BashOrg extends AbstractJokeSupplier {
         return new Joke().setText(findFirstRandomJoke());
     }
 
+
     private String findFirstRandomJoke() {
         if (jokeStack.size() > 0) {
             return jokeStack.pop();

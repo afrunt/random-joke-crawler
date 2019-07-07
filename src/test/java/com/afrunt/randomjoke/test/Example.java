@@ -14,8 +14,8 @@ public class Example {
         jokes = jokes.withDefaultSuppliers()
                 .without(BashOrg.class)
                 .with(BashOrg.class);
-
-        for (int i = 0; i < 100; i++) {
+        
+        for (int i = 0; i < 1000; i++) {
             jokes
                     .randomJoke()
                     .ifPresent(Example::printJoke);
