@@ -139,6 +139,16 @@ public class Jokes implements HttpOperationsSupport {
         return this;
     }
 
+    public Jokes overrideHosts(Map<String, String> overrides) {
+        getJokeSuppliers().stream()
+                .filter(supplier -> supplier instanceof AbstractRemoteHostJokeSupplier)
+                .map(supplier -> (AbstractRemoteHostJokeSupplier) supplier)
+                .filter(supplier -> overrides.containsKey(supplier.getHost()))
+                .forEach(supplier -> supplier.setHost(overrides.get(supplier.getHost())));
+
+        return this;
+    }
+
     @Override
     public HtmlCleaner getCleaner() {
         if (cleaner == null) {

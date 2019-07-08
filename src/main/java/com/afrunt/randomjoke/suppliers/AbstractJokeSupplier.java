@@ -12,10 +12,7 @@ import java.util.function.Supplier;
 public abstract class AbstractJokeSupplier implements Supplier<Joke>, HttpOperationsSupport {
     private HtmlCleaner cleaner = new HtmlCleaner();
 
-    private boolean useProxy = false;
-
     public abstract String getSource();
-
 
     @Override
     public HtmlCleaner getCleaner() {

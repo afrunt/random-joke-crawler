@@ -12,8 +12,12 @@ import java.util.stream.Collectors;
 /**
  * @author Andrii Frunt
  */
-public class GoodBadJokes extends AbstractJokeSupplier {
+public class GoodBadJokes extends AbstractRemoteHostJokeSupplier {
     private Stack<String> jokeStack = new Stack<>();
+
+    public GoodBadJokes() {
+        setHost("www.goodbadjokes.com");
+    }
 
     @Override
     public String getSource() {
@@ -24,7 +28,7 @@ public class GoodBadJokes extends AbstractJokeSupplier {
     public Joke get() {
 
         if (jokeStack.isEmpty()) {
-            TagNode page = tagNodeFromUrl("https://www.goodbadjokes.com");
+            TagNode page = tagNodeFromUrl("https://" + getHost());
 
             List<? extends TagNode> jokeNodes = page.getElementListByAttValue("class", "joke-body-wrap", true, true);
 

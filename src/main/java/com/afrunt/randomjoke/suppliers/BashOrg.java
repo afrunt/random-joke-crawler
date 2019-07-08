@@ -12,21 +12,24 @@ import java.util.stream.Collectors;
 /**
  * @author Andrii Frunt
  */
-public class BashOrg extends AbstractJokeSupplier {
+public class BashOrg extends AbstractRemoteHostJokeSupplier {
     private Stack<String> jokeStack = new Stack<>();
+
+    public BashOrg() {
+        setHost("bash.org");
+    }
 
     @Override
     public Joke get() {
         return new Joke().setText(findFirstRandomJoke());
     }
 
-
     private String findFirstRandomJoke() {
         if (jokeStack.size() > 0) {
             return jokeStack.pop();
         } else {
 
-            TagNode page = tagNodeFromUrl("http://bash.org/?random");
+            TagNode page = tagNodeFromUrl("http://" + getHost() + "/?random");
 
             List<? extends TagNode> jokeNodes = page.getElementListByAttValue("class", "qt", true, true);
 

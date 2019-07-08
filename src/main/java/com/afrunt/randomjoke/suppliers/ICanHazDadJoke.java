@@ -8,7 +8,11 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * @author Andrii Frunt
  */
-public class ICanHazDadJoke extends AbstractJokeSupplier {
+public class ICanHazDadJoke extends AbstractRemoteHostJokeSupplier {
+    public ICanHazDadJoke() {
+        setHost("icanhazdadjoke.com");
+    }
+
     @Override
     public Joke get() {
         Map<String, String> headers = Map.of(
@@ -17,7 +21,7 @@ public class ICanHazDadJoke extends AbstractJokeSupplier {
         );
         return new Joke()
                 .setText(
-                        jsonObjectFromUrl("https://icanhazdadjoke.com/", headers)
+                        jsonObjectFromUrl("https://" + getHost() + "/", headers)
                                 .optString("joke")
                 );
     }

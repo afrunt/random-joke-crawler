@@ -5,11 +5,15 @@ import com.afrunt.randomjoke.Joke;
 /**
  * @author Andrii Frunt
  */
-public class SecondChuckNorris extends AbstractJokeSupplier {
+public class SecondChuckNorris extends AbstractRemoteHostJokeSupplier {
+    public SecondChuckNorris() {
+        setHost("api.icndb.com");
+    }
+
     @Override
     public Joke get() {
         return new Joke()
-                .setText(jsonObjectFromUrl("https://api.icndb.com/jokes/random")
+                .setText(jsonObjectFromUrl("https://" + getHost() + "/jokes/random")
                         .optJSONObject("value")
                         .optString("joke")
                 );
